@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ไอ๊ยะะ บุฟเฟ่ต์ - เมนูอาหาร</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+        .menu-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .menu-category {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .menu-item image {
+            width: 128px;
+            height: 128px;
+            border-radius: 5px;
+        }
+        .menu-details {
+            flex-grow: 1;
+            margin-left: 10px;
+            text-align: left;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-controls button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+        .order-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .order-button:disabled {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h2>เมนูอาหาร</h2>
+        <div id="menu-list"></div>
+        <button class="order-button" id="order-button" onclick="placeOrder()">สั่งอาหาร</button>
+    </div>
+    <script>
+        const menuItems = [
+            { id: 1, name: "เนื้อสไลด์", category: "เมนูเนื้อ"},
+            { id: 2, name: "เนื้อสันคอ", category: "เมนูเนื้อ"},
+            { id: 3, name: "เนื้อสันนอก", category: "เมนูเนื้อ"},
+            { id: 4, name: "เนื้อสันใน", category: "เมนูเนื้อ"},
+            { id: 5, name: "เนื้อริบอาย", category: "เมนูเนื้อ"},
+            { id: 6, name: "เนื้อใบพาย", category: "เมนูเนื้อ"},
+            { id: 7, name: "เนื้อวากิว", category: "เมนูเนื้อ"},
+            { id: 8, name: "สามชั้นหมูสไลด์", category: "เมนูหมู"},
+            { id: 9, name: "สันคอหมูสไลด์", category: "เมนูหมู"},
+            { id: 10, name: "สันในหมูสไลด์", category: "เมนูหมู"},
+            { id: 11, name: "ตับหมู", category: "เมนูหมู"},
+            { id: 12, name: "อกไก่สไลด์", category: "เมนูไก่"},
+            { id: 13, name: "ไก่หมักซอสพริกไทยดำ", category: "เมนูไก่"},
+            { id: 14, name: "ไก่หมักซอสสไปซี่", category: "เมนูไก่"},
+            { id: 15, name: "ไก่หมักซอสเทอริยากิ", category: "เมนูไก่"},
+            { id: 16, name: "ไก่หมักกระเทียม", category: "เมนูไก่"},
+            { id: 17, name: "ไก่หมักซอสบาร์บีคิว", category: "เมนูไก่"},
+            { id: 18, name: "กุ้ง", category: "เมนูซีฟู้ด"},
+            { id: 19, name: "ปลาหมึก", category: "เมนูซีฟู้ด"},
+            { id: 20, name: "กุ้งแม่น้ำ", category: "เมนูซีฟู้ด"},
+            { id: 21, name: "แมงกะพรุน", category: "เมนูซีฟู้ด"},
+            { id: 22, name: "หอยแมงภู่", category: "เมนูซีฟู้ด"},
+            { id: 23, name: "ลูกชิ้นกุ้ง", category: "ลูกชิ้น"},
+            { id: 24, name: "ลูกชิ้นปลาฮ่องเต้", category: "ลูกชิ้น"},
+            { id: 25, name: "ลูกหมู", category: "ลูกชิ้น"},
+            { id: 26, name: "ลูกเนื้อ", category: "ลูกชิ้น"},
+            { id: 27, name: "ลูกไก่", category: "ลูกชิ้น"},
+            { id: 28, name: "ไส้กรอกชีส", category: "ลูกชิ้น"},
+            { id: 29, name: "เต้าหู้ชีส", category: "ลูกชิ้น"},
+            { id: 30, name: "เกี๊ยวหมู", category: "ลูกชิ้น"},
+            { id: 31, name: "เกี๊ยวปลา", category: "ลูกชิ้น"},
+            { id: 32, name: "ชุดผักรวม", category: "เมนูผัก"},
+            { id: 33, name: "ผักบุ้ง", category: "เมนูผัก"},
+            { id: 34, name: "ข้าวโพดหวาน", category: "เมนูผัก"},
+            { id: 35, name: "แครอท", category: "เมนูผัก"},
+            { id: 36, name: "กะหล่ำปลี", category: "เมนูผัก"},
+            { id: 37, name: "สาหร่ายวากาเมะ", category: "เมนูผัก"},
+            { id: 38, name: "ข้าวโพดอ่อน", category: "เมนูผัก"},
+            { id: 39, name: "ผักกวางตุ้งไต้หวัน", category: "เมนูผัก"},
+            { id: 40, name: "ผักกาดขาว", category: "เมนูผัก"},
+            { id: 41, name: "เห็ดชิเมจิ", category: "เมนูผัก"},
+            { id: 42, name: "เห็ดออรินจิ", category: "เมนูผัก"},
+            { id: 43, name: "เห็ดเข็มทอง", category: "เมนูผัก"},
+            { id: 44, name: "บะหมี่หยก", category: "เมนูเส้น"},
+            { id: 45, name: "มาม่า", category: "เมนูเส้น"},
+            { id: 46, name: "วุ้นเส้น", category: "เมนูเส้น"},
+            { id: 47, name: "ชีส", category: "เมนูอื่นๆ"},
+            { id: 48, name: "ข้าวผัด", category: "เมนูอื่นๆ"},
+            { id: 49, name: "ไข่ไก่", category: "เมนูอื่นๆ"},
+            { id: 50, name: "ไอศกรีมวานิลลา", category: "เมนูของหวาน"},
+            { id: 51, name: "ไอศกรีมช็อกโกแลต", category: "เมนูของหวาน"},
+            { id: 52, name: "ไอศกรีมสตรอว์เบอร์รี่", category: "เมนูของหวาน"}
+        ].map(item => ({ ...item, quantity: 0 }));
+        
+        function updateMenu() {
+            const menuList = document.getElementById("menu-list");
+            menuList.innerHTML = "";
+            const categories = [...new Set(menuItems.map(item => item.category))];
+
+            categories.forEach(category => {
+                const categoryHeader = document.createElement("div");
+                categoryHeader.classList.add("menu-category");
+                categoryHeader.textContent = category;
+                menuList.appendChild(categoryHeader);
+
+                menuItems.filter(item => item.category === category).forEach(item => {
+                    const div = document.createElement("div");
+                    div.classList.add("menu-item");
+                    div.innerHTML = `
+                        <div class="menu-details">
+                            <h3>${item.name}</h3>
+                        </div>
+                        <div class="quantity-controls">
+                            <button onclick="changeQuantity(${item.id}, -1)">-</button>
+                            <span id="quantity-${item.id}">${item.quantity}</span>
+                            <button onclick="changeQuantity(${item.id}, 1)">+</button>
+                        </div>
+                    `;
+                    menuList.appendChild(div);
+                });
+            });
+        }
+
+        function changeQuantity(itemId, amount) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (item) {
+                item.quantity = Math.max(0, item.quantity + amount);
+                document.getElementById(`quantity-${item.id}`).textContent = item.quantity;
+            }
+        }
+
+        function placeOrder() {
+            const orderItems = menuItems.filter(item => item.quantity > 0);
+            if (orderItems.length === 0) {
+                alert("กรุณาเลือกสินค้าอย่างน้อย 1 รายการ");
+                return;
+            }
+            let orderSummary = "คุณได้สั่งสินค้าดังนี้:\n\n";
+            orderItems.forEach(item => {
+                orderSummary += `${item.name} - จำนวน ${item.quantity} ชิ้น\n`;
+            });
+            alert(orderSummary);
+
+            localStorage.setItem("currentOrder", JSON.stringify(orderItems));
+
+            window.location.href = "review.html";
+        }
+
+        updateMenu();
+
+    </script>
+</body>
+</html>

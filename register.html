@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สมัครสมาชิก</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .signup-container {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .signup-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .form-group input:focus {
+      border-color: #2ecc71;
+      outline: none;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2ecc71;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .signup-btn:hover {
+      background: #27ae60;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>สมัครสมาชิก</h2>
+    <form id="signupForm" onsubmit="register(event)">
+      <div class="form-group">
+        <label for="username">ชื่อผู้ใช้</label>
+        <input type="text" id="username" name="username" required />
+      </div>
+      <div class="form-group">
+        <label for="email">อีเมล์</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">รหัสผ่าน</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">ยืนยันรหัสผ่าน</label>
+        <input type="password" id="confirm-password" name="confirm-password" required />
+      </div>
+      <button type="submit" class="signup-btn">สมัครสมาชิก</button>
+    </form>
+    <div class="bottom-text">
+      มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a>
+    </div>
+
+    <script>
+        function register(event) {
+            event.preventDefault(); 
+        
+            let username = document.getElementById("username").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+
+            if (!username || !email || !password || !confirmPassword) {
+                alert("กรุณากรอกข้อมูลให้ครบทุกช่อง!");
+                return;
+            }
+        
+            if (password !== confirmPassword) {
+                alert("รหัสผ่านไม่ตรงกัน! กรุณาลองใหม่");
+                return;
+            }
+
+            if (localStorage.getItem(username)) {
+                alert("ชื่อผู้ใช้นี้ถูกใช้แล้ว!");
+                return;
+            }
+
+            let userData = {
+                username: username,
+                email: email,
+                password: password
+            };
+        
+            localStorage.setItem(username, JSON.stringify(userData));
+
+            alert("สมัครสมาชิกสำเร็จ! ไปที่หน้าเข้าสู่ระบบ");
+        
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+        }
+        </script>
+        
+  </div>
+</body>
+</html>

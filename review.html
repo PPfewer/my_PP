@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รีวิวร้านอาหาร</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            background-color: #fff;
+            margin: 50px auto;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .rating-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .rating-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            cursor: pointer;
+            display: flex;
+        }
+
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            transition: 0.2s;
+        }
+
+        .star.selected {
+            color: gold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .thank-you {
+            display: none;
+            text-align: center;
+            font-size: 20px;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>รีวิวร้านอาหาร</h1>
+
+    <form id="review-form">
+        <div class="rating-container">
+            <div class="rating-group">
+                <label>ความพึงพอใจของอาหาร:</label>
+                <div class="stars" id="food-stars">
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <label>ความพึงพอใจของการบริการ:</label>
+                <div class="stars" id="service-stars">
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+            </div>
+        </div>
+
+        <label>ความคิดเห็นของคุณ:</label>
+        <textarea name="comment" placeholder="เขียนความคิดเห็นของคุณที่นี่..."></textarea>
+
+        <button type="submit" class="submit-btn">ส่งรีวิว</button>
+    </form>
+
+    <div class="thank-you" id="thank-you-msg">
+        🙏 ขอบคุณสำหรับการรีวิวของคุณ!
+    </div>
+</div>
+
+<script>
+    function setupStars(containerId) {
+        const container = document.getElementById(containerId);
+        const stars = container.querySelectorAll('.star');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = parseInt(star.getAttribute('data-value'));
+                stars.forEach((s, index) => {
+                    s.classList.toggle('selected', index < rating);
+                });
+            });
+        });
+    }
+
+    setupStars('food-stars');
+    setupStars('service-stars');
+
+    const form = document.getElementById('review-form');
+    const thankYou = document.getElementById('thank-you-msg');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        form.style.display = 'none';
+        thankYou.style.display = 'block';
+    });
+</script>
+
+</body>
+</html>
